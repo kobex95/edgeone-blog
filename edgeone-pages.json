@@ -21,5 +21,32 @@
       "pattern": "/*",
       "serve": "dist/client"
     }
+  ],
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/index.html",
+      "statusCode": 200
+    },
+    {
+      "source": "/articles",
+      "destination": "/index.html",
+      "statusCode": 200
+    },
+    {
+      "source": "/article/*",
+      "destination": "/index.html",
+      "statusCode": 200
+    },
+    {
+      "source": "/admin",
+      "destination": "/index.html",
+      "statusCode": 200
+    },
+    {
+      "source": "/login",
+      "destination": "/index.html",
+      "statusCode": 200
+    }
   ]
 }

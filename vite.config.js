@@ -20,6 +20,15 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist/client',
-    assetsDir: 'assets'
-  }
+    assetsDir: 'assets',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['vue', 'vue-router', 'pinia'],
+          utils: ['axios', 'marked', 'highlight.js']
+        }
+      }
+    }
+  },
+  base: './'
 })
