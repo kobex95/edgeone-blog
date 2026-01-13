@@ -1,0 +1,39 @@
+{
+  "$schema": "https://edgeone.cloud/schemas/edgeone.config.json",
+  "name": "mu-blog",
+  "version": "1.0.0",
+  "runtime": "nodejs18",
+  "entrypoint": "server.js",
+  "build": {
+    "commands": [
+      "npm install",
+      "npm run build"
+    ],
+    "artifacts": [
+      "dist/**/*",
+      "server/**/*",
+      "package.json",
+      "package-lock.json",
+      "server.js"
+    ]
+  },
+  "environment": {
+    "NODE_ENV": "production",
+    "PORT": "8080"
+  },
+  "scaling": {
+    "minInstances": 1,
+    "maxInstances": 10,
+    "cpu": "0.5",
+    "memory": "512Mi"
+  },
+  "network": {
+    "port": 8080,
+    "protocol": "HTTP"
+  },
+  "healthCheck": {
+    "path": "/api/articles",
+    "intervalSeconds": 30,
+    "timeoutSeconds": 5
+  }
+}
