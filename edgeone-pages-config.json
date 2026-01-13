@@ -1,0 +1,88 @@
+{
+  "name": "mu-blog",
+  "framework": "vite",
+  "functions": {
+    "directory": "edge-functions",
+    "routes": [
+      {
+        "pattern": "/api/(.*)",
+        "function": "api-handler"
+      },
+      {
+        "pattern": "/admin(.*)", 
+        "function": "admin-handler"
+      }
+    ]
+  },
+  "build": {
+    "command": "npm run build",
+    "publish": "dist/client"
+  },
+  "routes": [
+    {
+      "pattern": "/api/*",
+      "function": "api-handler"
+    },
+    {
+      "pattern": "/admin*",
+      "function": "admin-handler" 
+    },
+    {
+      "pattern": "/*",
+      "serve": "dist/client"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/index.html",
+      "statusCode": 200
+    },
+    {
+      "source": "/articles",
+      "destination": "/index.html",
+      "statusCode": 200
+    },
+    {
+      "source": "/article/*",
+      "destination": "/index.html", 
+      "statusCode": 200
+    },
+    {
+      "source": "/admin",
+      "destination": "/index.html",
+      "statusCode": 200
+    },
+    {
+      "source": "/login",
+      "destination": "/index.html",
+      "statusCode": 200
+    },
+    {
+      "source": "/debug-login",
+      "destination": "/index.html",
+      "statusCode": 200
+    },
+    {
+      "source": "/api-debug",
+      "destination": "/index.html",
+      "statusCode": 200
+    }
+  ],
+  "headers": {
+    "/api/*": [
+      {
+        "key": "Access-Control-Allow-Origin",
+        "value": "*"
+      },
+      {
+        "key": "Access-Control-Allow-Methods", 
+        "value": "GET, POST, PUT, DELETE, OPTIONS"
+      },
+      {
+        "key": "Access-Control-Allow-Headers",
+        "value": "Content-Type, Authorization"
+      }
+    ]
+  }
+}
