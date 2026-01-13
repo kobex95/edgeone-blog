@@ -5,6 +5,7 @@ import ArticleDetail from './views/ArticleDetail.vue'
 import Admin from './views/Admin.vue'
 import Login from './views/Login.vue'
 import DebugLogin from './views/DebugLogin.vue'
+import ApiDebugger from './views/ApiDebugger.vue'
 
 const routes = [
   {
@@ -38,6 +39,11 @@ const routes = [
     path: '/debug-login',
     name: 'DebugLogin',
     component: DebugLogin
+  },
+  {
+    path: '/api-debug',
+    name: 'ApiDebugger',
+    component: ApiDebugger
   }
 ]
 

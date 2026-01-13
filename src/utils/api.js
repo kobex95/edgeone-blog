@@ -1,8 +1,29 @@
 import axios from 'axios'
 
+// 动态确定API基础URL
+const getBaseURL = () => {
+  // 开发环境
+  if (import.meta.env.DEV) {
+    return 'http://localhost:3001/api'
+  }
+  
+  // 生产环境 - 使用相对路径或完整域名
+  const isEdgeFunction = typeof EdgeRuntime !== 'undefined'
+  if (isEdgeFunction) {
+    // Edge函数环境
+    return '/api'
+  }
+  
+  // Pages环境 - 可能需要完整域名
+  return '/api' // 或者使用完整的API域名
+}
+
 const api = axios.create({
-  baseURL: '/api',
-  timeout: 10000
+  baseURL: getBaseURL(),
+  timeout: 15000,
+  headers: {
+    'Content-Type': 'application/json'
+  }
 })
 
 // 请求拦截器
