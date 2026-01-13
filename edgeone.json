@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "functions": {
+    "api": {
+      "runtime": "nodejs18",
+      "entrypoint": "edge-functions/simple-api-handler.js",
+      "routes": [
+        {
+          "pattern": "/api/*",
+          "function": "api"
+        }
+      ]
+    }
+  },
+  "routes": [
+    {
+      "pattern": "/api/*",
+      "function": "api"
+    },
+    {
+      "pattern": "/*",
+      "serve": "dist/client"
+    }
+  ]
+}

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>函数测试页面</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .test-result {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+        .success {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        .info {
+            background: #d1ecf1;
+            border-color: #17a2b8;
+            color: #0c5460;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 14px;
+        }
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 EdgeOne 函数测试</h1>
+        
+        <div class="test-result info">
+            <h3>📊 当前状态</h3>
+            <p><strong>域名:</strong> <span id="currentDomain"></span></p>
+            <p><strong>测试时间:</strong> <span id="testTime"></span></p>
+        </div>
+        
+        <div class="test-section">
+            <h3>🧪 函数测试</h3>
+            <button onclick="testFunctionDirectly()">直接测试函数</button>
+            <button onclick="testApiEndpoint()">测试API端点</button>
+            <button onclick="testLogin()">测试登录功能</button>
+            <button onclick="getAllTestResults()">获取所有测试结果</button>
+        </div>
+        
+        <div id="testResults"></div>
+    </div>
+
+    <script>
+        // 初始化显示信息
+        document.getElementById('currentDomain').textContent = window.location.origin;
+        document.getElementById('testTime').textContent = new Date().toLocaleString();
+        
+        let testResults = [];
+        
+        function addResult(title, success, data) {
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `test-result ${success ? 'success' : 'error'}`;
+            
+            resultDiv.innerHTML = `
+                <h4>${success ? '✅' : '❌'} ${title}</h4>
+                <pre>${typeof data === 'object' ? JSON.stringify(data, null, 2) : data}</pre>
+            `;
+            
+            document.getElementById('testResults').prepend(resultDiv);
+            testResults.push({ title, success, data, timestamp: new Date() });
+        }
+        
+        async function testFunctionDirectly() {
+            const button = event.target;
+            button.classList.add('loading');
+            button.textContent = '测试中...';
+            
+            try {
+                // 直接调用可能的函数URL
+                const testUrls = [
+                    `${window.location.origin}/api/auth/login`,
+                    `${window.location.origin}/api/`,
+                    `${window.location.origin}/.netlify/functions/api`, // Netlify风格
+                    `${window.location.origin}/functions/api` // Vercel风格
+                ];
+                
+                for (const url of testUrls) {
+                    try {
+                        console.log('测试URL:', url);
+                        const response = await fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                username: 'admin',
+                                password: 'admin123'
+                            }),
+                            timeout: 5000
+                        });
+                        
+                        const data = await response.json();
+                        addResult(
+                            `函数直接测试 (${url})`,
+                            response.ok,
+                            {
+                                status: response.status,
+                                url: url,
+                                data: data
+                            }
+                        );
+                        
+                        if (response.ok) {
+                            break; // 找到工作的端点就停止
+                        }
+                    } catch (error) {
+                        console.log(`URL ${url} 测试失败:`, error.message);
+                    }
+                }
+                
+            } catch (error) {
+                addResult('函数测试', false, error.message);
+            } finally {
+                button.classList.remove('loading');
+                button.textContent = '直接测试函数';
+            }
+        }
+        
+        async function testApiEndpoint() {
+            try {
+                const response = await fetch('/api/articles?limit=1');
+                const data = await response.json();
+                
+                addResult(
+                    'API端点测试',
+                    response.ok,
+                    {
+                        status: response.status,
+                        statusText: response.statusText,
+                        data: data
+                    }
+                );
+            } catch (error) {
+                addResult('API端点测试', false, error.message);
+            }
+        }
+        
+        async function testLogin() {
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: 'admin',
+                        password: 'admin123'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                addResult(
+                    '登录功能测试',
+                    response.ok && data.token,
+                    {
+                        status: response.status,
+                        hasToken: !!data.token,
+                        userData: data.user,
+                        message: data.message
+                    }
+                );
+            } catch (error) {
+                addResult('登录功能测试', false, error.message);
+            }
+        }
+        
+        function getAllTestResults() {
+            addResult(
+                '完整测试报告',
+                true,
+                {
+                    totalTests: testResults.length,
+                    successCount: testResults.filter(r => r.success).length,
+                    errorCount: testResults.filter(r => !r.success).length,
+                    results: testResults.map(r => ({
+                        title: r.title,
+                        success: r.success,
+                        timestamp: r.timestamp.toLocaleTimeString()
+                    }))
+                }
+            );
+        }
+        
+        // 页面加载完成后自动运行基础测试
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                testApiEndpoint();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

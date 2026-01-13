@@ -1,0 +1,17 @@
+{
+  "projectId": "mu-blog",
+  "framework": "vite",
+  "build": {
+    "command": "npm run build",
+    "publish": "dist/client"
+  },
+  "functions": {
+    "directory": "edge-functions",
+    "nodeVersion": "18"
+  },
+  "dev": {
+    "command": "npm run dev",
+    "port": 3000,
+    "functionsPort": 3001
+  }
+}
