@@ -54,6 +54,7 @@ Thumbs.db
 
 # EdgeOne deployment files (if contains sensitive info)
 edgeone.config.json.local
+.edgeone/
 
 # Database files
 *.db
