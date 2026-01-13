@@ -350,11 +350,11 @@ body {
   transform: rotate(-45deg) translate(6px, -6px);
 }
 
-.menu-toggle span.translate-y-1.5 {
+.menu-toggle span.translate-y-1\.5 {
   transform: translateY(0.375rem);
 }
 
-.menu-toggle span.-translate-y-1.5 {
+.menu-toggle span.-translate-y-1\.5 {
   transform: translateY(-0.375rem);
 }
 
