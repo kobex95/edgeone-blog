@@ -1,0 +1,25 @@
+{
+  "name": "mu-blog",
+  "framework": "vite",
+  "functions": {
+    "directory": "edge-functions"
+  },
+  "build": {
+    "command": "npm run build",
+    "publish": "dist/client"
+  },
+  "routes": [
+    {
+      "pattern": "/api/*",
+      "function": "api-handler"
+    },
+    {
+      "pattern": "/admin*",
+      "function": "admin-handler"
+    },
+    {
+      "pattern": "/*",
+      "serve": "dist/client"
+    }
+  ]
+}
