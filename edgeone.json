@@ -9,20 +9,12 @@
   },
   "routes": [
     {
-      "pattern": "/test",
-      "function": "test-function"
-    },
-    {
       "pattern": "/api/*",
       "function": "api-handler"
     },
     {
       "pattern": "/admin/*",
       "function": "admin-handler"
-    },
-    {
-      "pattern": "/function-verification.html",
-      "serve": "public/function-verification.html"
     },
     {
       "pattern": "/*",
